@@ -21,15 +21,66 @@ app.get('/',async(req,res) =>{
 })
 
 app.get('/update',async(req,res)=>{
-    res.render('update');
+    let id = req.query.id;
+    let ObjectID = require('mongodb').ObjectID(id);
+    let condition = {'_id':ObjectID};
+    let client  = await MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true });
+    let dbo = client.db("StorageToy");
+    let prod = await dbo.collection("ListData").findOne(condition);
+    res.render('update',{model:prod});
 })
 
-app.post('/doupdate',async(req,res)=>{
-    let client = await MongoClient.connect(url);
+app.get('/delete',async(req,res)=>{
+    let id = req.query.id;
+    let ObjectID = require('mongodb').ObjectID(id);
+    let condition = {'_id':ObjectID};
+    let client  = await MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true });
     let dbo = client.db("StorageToy");
-    let results = await dbo.collection("ListData").findOne({}).toArray();
-    res.render('home',{model:results});
+    await dbo.collection("ListData").deleteOne(condition);
+    res.redirect('/');
+    
 })
+
+app.get('/doUpdate',async(req,res)=>{
+    let nameProduct = req.body.txtProductName;
+    let priceProduct = req.body.txtProductPrice;
+    let newProducer = req.body.txtProducer;
+    let id = req.body.id;
+    
+    let newValues = {$set: {productName: nameProduct,productPrice: priceProduct,producer:newProducer}};
+    var ObjectID = require('mongodb').ObjectID;
+    let condition = {"_id" : ObjectID(id)};
+
+    let client  = await MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true });
+    let dbo = client.db("StorageToy");
+    await dbo.collection("ListData").updateOne(condition,newValues);
+    res.render('/');
+})
+
+app.post('/doSearch',async(req,res)=>{
+    let inputSearch = req.body.txtSearch;
+    let client  = await MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true });
+    let dbo = client.db("StorageToy");
+    let results = await dbo.collection('ListData').find({productName: new RegExp(inputSearch,'i')}).toArray();
+    res.render('home',{model: results});
+})
+
+app.post('/doInsert',async(req,res)=>{
+    let newName = req.body.txtNewName;
+    let newPrice = req.body.txtNewPrice;
+    let newProducer = req.body.txtNewProducer;
+    let newProduct = {
+        productName: newName,
+        productPrice: newPrice,
+        producer: newProducer
+    }
+    let client  = await MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true });
+    let dbo = client.db("StorageToy");
+    await dbo.collection('ListData').insertOne(newProduct);
+    res.redirect('/');
+})
+
+
 var PORT = process.env.PORT || 3000;
 app.listen(PORT);
-console.log("Server is running on PORT 3000");
+console.log("Server is running on PORT " + PORT);

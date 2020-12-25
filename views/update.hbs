@@ -5,29 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <style>
+        #form-inforproduct{
+            background-color:whitesmoke;
+            margin-top: 20px;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+        #btn-submit-center{
+            text-align: center;
+        }
+        #btn-back-to-home{
+            margin-left: 20px;
+        }
 
+        #update-footer-css{
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            margin-top: 10px;
+            width: 100%;
+            overflow: hidden;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        <form action="/doUpdate" method="POST">
-             <div class="form-group">   
-                <label for="formGroupExampleInput">{{model._id}}</label>             
-            </div>
+    <div id = "btn-back-to-home">
+        <a class="btn btn-primary" href="/" role="button">Back to Home</a>
+    </div>
+<div id="form-inforproduct">
+    <form action="/doUpdate" method="POST">
+        <fieldset align="center">
+            <legend text-align="center">Update product</legend>
+        </fieldset> 
+            {{!-- <div class="form-group">   
+                <label for="formGroupExampleInput" > <b>ID {{model._id}}</b> </label>             
+            </div> --}}
+            <input type="hidden" name="id" value="{{model._id}}">
             <div class="form-group">
                 <label for="formGroupExampleInput">Name</label>
-                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Name">
+                <input type="text" name="txtProductName" class="form-control" id="formGroupExampleInput" placeholder="Name" value="{{model.productName}}">
             </div>
             <div class="form-group">
                 <label for="formGroupExampleInput">Price</label>
-                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Price" value="{{price}}">
+                <input name="txtProductPrice" type="text" class="form-control" id="formGroupExampleInput" placeholder="Price" value="{{model.productPrice}}">
             </div>
             <div class="form-group">
                 <label for="formGroupExampleInput">Producer</label>
-                <input type="text" name="" id="formGroupExampleInput" placeholder="Producer">
+                <input type="text" name="txtProducer" class="form-control" id="formGroupExampleInput" placeholder="producer" value="{{model.producer}}">
             </div>
+            <div id = "btn-submit-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+    </form>
+</div>
+<div id="update-footer-css">
+        {{>footer}}
+</div>
 
-        </form>
-    </div>
 </body>
 </html>
 
