@@ -41,7 +41,7 @@ app.get('/delete',async(req,res)=>{
     
 })
 
-app.get('/doUpdate',async(req,res)=>{
+app.post('/doUpdate',async(req,res)=>{
     let nameProduct = req.body.txtProductName;
     let priceProduct = req.body.txtProductPrice;
     let newProducer = req.body.txtProducer;
@@ -54,7 +54,7 @@ app.get('/doUpdate',async(req,res)=>{
     let client  = await MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true });
     let dbo = client.db("StorageToy");
     await dbo.collection("ListData").updateOne(condition,newValues);
-    res.render('/');
+    res.redirect('/');
 })
 
 app.post('/doSearch',async(req,res)=>{
