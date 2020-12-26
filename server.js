@@ -44,10 +44,11 @@ app.get('/delete',async(req,res)=>{
 app.post('/doUpdate',async(req,res)=>{
     let nameProduct = req.body.txtProductName;
     let priceProduct = req.body.txtProductPrice;
-    let newProducer = req.body.txtProducer;
+    let updateProducer = req.body.txtProducer;
+    let updateColor = req.body.txtColor;
     let id = req.body.id;
     
-    let newValues = {$set: {productName: nameProduct,productPrice: priceProduct,producer:newProducer}};
+    let newValues = {$set: {productName: nameProduct,productPrice: priceProduct,color:updateColor,producer:updateProducer}};
     var ObjectID = require('mongodb').ObjectID;
     let condition = {"_id" : ObjectID(id)};
 
@@ -69,9 +70,11 @@ app.post('/doInsert',async(req,res)=>{
     let newName = req.body.txtNewName;
     let newPrice = req.body.txtNewPrice;
     let newProducer = req.body.txtNewProducer;
+    let newColor = req.body.txtNewColor;
     let newProduct = {
         productName: newName,
         productPrice: newPrice,
+        color: newColor,
         producer: newProducer
     }
     let client  = await MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true });
