@@ -41,6 +41,10 @@ app.get('/delete',async(req,res)=>{
     
 })
 
+app.get('/insert',async(req,res)=>{
+    res.render('insert');
+})
+
 app.post('/doUpdate',async(req,res)=>{
     let nameProduct = req.body.txtProductName;
     let priceProduct = req.body.txtProductPrice;
@@ -71,18 +75,33 @@ app.post('/doInsert',async(req,res)=>{
     let newPrice = req.body.txtNewPrice;
     let newProducer = req.body.txtNewProducer;
     let newColor = req.body.txtNewColor;
-    let newProduct = {
-        productName: newName,
-        productPrice: newPrice,
-        color: newColor,
-        producer: newProducer
+    let errorMsg = {
+        name: "",
+        price: ""
     }
-    let client  = await MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true });
-    let dbo = client.db("StorageToy");
-    await dbo.collection('ListData').insertOne(newProduct);
-    res.redirect('/');
-})
+    if(newName != null && newName.length < 2){
+        errorMsg.name = "Name must to be greater than 2 ";
+    }
+    if(newPrice != null && isNaN(newPrice)){
+        errorMsg.price = "Must to be number!";
+    }
+    if(errorMsg.name.length !=0 || errorMsg.price.length != 0){
+        res.render('insert',{error: errorMsg})
+    }
+    else{
+        let newProduct = {
+            productName: newName,
+            productPrice: newPrice,
+            color: newColor,
+            producer: newProducer
+        }
+        let client  = await MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true });
+        let dbo = client.db("StorageToy");
+        await dbo.collection('ListData').insertOne(newProduct);
+        res.redirect('/');
+    }
 
+})
 
 var PORT = process.env.PORT || 3000;
 app.listen(PORT);
